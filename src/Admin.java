@@ -1,12 +1,30 @@
 public class Admin extends User{
 
-    public Admin() {
-    }
+   private Map<String, Project> projects;
+    private List<Client> clients;
+    private List<Employee> employees;
+    private List<String> registeredEmployees;
+    private boolean isAdmin;
 
     public Admin(String username, String password) {
         super(username, password);
-        super.username = username;
-        super.password = password;
+        this.projects = new HashMap<>();
+        this.clients = new ArrayList<>();
+        this.employees = new ArrayList<>();
+        this.registeredEmployees = new ArrayList<>();
+        this.isAdmin = true;
+    }
+    @Override
+    public void saveDataToFile(String filePath) {
+       
+    }
+     @Override
+    public void loadDataFromFile(String filePath) {
+        
+    }
+     @Override
+    public void addClient(String name, String projectName, String contractExpirationDate) throws ParseException {
+        
     }
 
     @Override
