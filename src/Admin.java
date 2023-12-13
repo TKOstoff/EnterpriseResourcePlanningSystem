@@ -47,7 +47,20 @@ public class Admin extends User{
 
     @Override
     public void registerEmployee(String username, String password) {
-        
+        if (isEmployeeUsernameUnique(username)) {
+            System.out.println(" ");
+            System.out.println("Потребителско име: " + username);
+            System.out.println("Парола: " + password);
+
+            employees.put(username, new Employee(username, password));
+
+            System.out.println(username + " е успешно регистриран като нов служител.");
+        } else {
+            System.out.println("Потребителското име " + username + " вече съществува. Моля, изберете  друго.");
+        }
+    }
+    private boolean isEmployeeUsernameUnique(String username) {
+        return !employees.containsKey(username);
     }
   
 
