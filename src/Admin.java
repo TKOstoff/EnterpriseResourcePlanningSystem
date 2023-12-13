@@ -1,33 +1,47 @@
 public class Admin extends User{
 
-   private Map<String, Project> projects;
-    private List<Client> clients;
-    private List<Employee> employees;
-    private List<String> registeredEmployees;
-    private boolean isAdmin;
+   private List<Client> clients = new ArrayList<>();
+    private Map<String, Employee> employees = new HashMap<>();
 
     public Admin(String username, String password) {
         super(username, password);
-        this.projects = new HashMap<>();
-        this.clients = new ArrayList<>();
-        this.employees = new ArrayList<>();
-        this.registeredEmployees = new ArrayList<>();
-        this.isAdmin = true;
     }
     @Override
-    public void saveDataToFile(String filePath) {
-       
-    }
-     @Override
-    public void loadDataFromFile(String filePath) {
-        
-    }
-     @Override
-    public void addClient(String name, String projectName, String contractExpirationDate) throws ParseException {
+    void menu() {
         
     }
 
+
     @Override
-    protected void login() {
+    public void addClient(String name, String projectName, String contractExpirationDate) {
+        System.out.println("Име на клиента: " + name);
+        System.out.println("Име на проекта: " + projectName);
+        System.out.println("Дата на изтичане на договора: " + contractExpirationDate);
+
+        clients.add(new Client(name, projectName, contractExpirationDate));
+
+        System.out.println("Клиента с име " + name + " и проект '" + projectName +
+                "' с изтичане на договора на '" + contractExpirationDate + "' е успешно добавен.");
+    }
+
+    @Override
+    public void registerEmployee(String username, String password) {
+        
+    }
+  
+
+public void showMainMenu{
+
+    }
+    private void showStatisticsMenu() {
+        
+    }
+
+    private void searchByName() {
+       
+    }
+
+    private void searchByWeek() {
+       
     }
 }
