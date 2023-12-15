@@ -1,10 +1,8 @@
 import java.io.*;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 class Employee extends User {
-    Map<String, Integer> dailyLog = new HashMap<>();
-    private int reportCounter = 1;
+
 
     public Employee(String username, String password) {
         super(username, password);
@@ -97,4 +95,5 @@ class Employee extends User {
             e.printStackTrace();
         }
     }
+    
 }
