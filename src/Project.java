@@ -5,6 +5,10 @@ public class Project {
         this.projectName = projectName;
     }
 
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
+
     public String getName() {
         return projectName;
     }
