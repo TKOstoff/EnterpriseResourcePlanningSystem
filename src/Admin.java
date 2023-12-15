@@ -12,7 +12,7 @@ class Admin extends User implements EmployeeManagement, ClientManagement {
     }
 
     @Override
-    public void menu() {
+    public void menu(Client client) {
         Scanner scanner = new Scanner(System.in);
         int adminChoice;
 
