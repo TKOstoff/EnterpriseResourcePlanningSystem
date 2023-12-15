@@ -5,7 +5,7 @@ import java.util.*;
 class Admin extends User implements EmployeeManagement, ClientManagement {
     private List<Client> clients = new ArrayList<>();
     private Map<String, Employee> employees = new HashMap<>();
-   
+   private SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
     public Admin(String username, String password) {
         super(username, password);
