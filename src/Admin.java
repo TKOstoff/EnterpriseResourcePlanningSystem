@@ -12,7 +12,7 @@ class Admin extends User implements EmployeeManagement, ClientManagement {
     }
 
     @Override
-    void menu() {
+    public void menu() {
         Scanner scanner = new Scanner(System.in);
         int adminChoice;
 
@@ -219,7 +219,7 @@ class Admin extends User implements EmployeeManagement, ClientManagement {
         Scanner scanner = new Scanner(System.in);
 
         System.out.print("Въведете име на служител: ");
-        String employeeName = scanner.next();
+        String employeeName = scanner.nextLine();
 
         if (doesEmployeeNameExists(employeeName)) {
             displayEmployeeStatistics(employeeName);

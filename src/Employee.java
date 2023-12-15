@@ -1,79 +1,138 @@
-import java.util.Scanner;
+import java.util.*;
+import java.io.*;
 
-public class Employee extends User {
-    private String name;
-    private Client client;
-    private double hoursWorked;
-    Scanner scanner = new Scanner(System.in);
+class Employee extends User {
+    Map<String, Integer> dailyLog = new HashMap<>();
+    private int reportCounter = 1;
 
     public Employee(String username, String password) {
         super(username, password);
-        super.setUsername(username);
-        super.setPassword(password);
-    }
-
-    public Employee() {
-
-    }
-
-    public Employee(String name, String username, String password, double hoursWorked, Client client) {
-        super(username, password);
-        this.name = name;
-        super.setUsername(username);
-        super.setPassword(password);
-        this.client = client;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public double getHoursWorked() {
-        return hoursWorked;
-    }
-
-    public void setHoursWorked(double hoursWorked) {
-        this.hoursWorked = hoursWorked;
     }
 
     @Override
-    public void menu(Client client) {
-        int employeeChoice;
-        while (true) {
-            System.out.println(" ");
-            System.out.println("Меню за служител:");
-            System.out.println("1. Създаване на протокол за деня");
-            System.out.println("2. Назад.");
-            System.out.println("0. Изход.");
+    public void menu() {
+        System.out.println(" ");
+        System.out.println("Меню за служител:");
+        System.out.println("1. Създаване на протокол за деня.");
+        System.out.println("0. Връщане в менюто.");
 
-            employeeChoice = scanner.nextInt();
+        Scanner scanner = new Scanner(System.in);
+        int employeeChoice = scanner.nextInt();
 
-            switch (employeeChoice) {
-                case 1:
-                    createDailyProtocol(this.client);
-                    break;
-
-                case 2:
-                    UserManager.mainMenu();
-                    break;
-                case 0:
-                    return;
-                default:
-                    System.out.println("Грешен избор.");
-            }
+        switch (employeeChoice) {
+            case 1:
+                System.out.println("1. Създаване на протокол за деня...");
+                System.out.println(" ");
+                createDailyReport();
+                break;
+            case 0:
+                System.out.println("0. Връщане в менюто...");
+                System.out.println(" ");
+                UserManager.mainMenu();
+                break;
+            default:
+                System.out.println("Грешен избор. Опитай пак!");
+                System.out.println(" ");
         }
-
-
+        System.out.println(" ");
     }
 
-    private void createDailyProtocol(Client client) {
-        System.out.println("За кой клиент работихте днес?");
-        String clientName = scanner.nextLine();
-        System.out.println("Колко време работихе за избрания клиент?");
-        this.hoursWorked = scanner.nextDouble();
+    public String getPassword() {
+        return super.getPassword();
+    }
+
+    private boolean areClientsValid(String[] clients) {
+        List<String> validClients = getValidClients();
+        for (String client : clients) {
+            if (!validClients.contains(client)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void createDailyReport() {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("За кои клиенти сте работили днес? (Разделете със запетаи): ");
+        String[] clients = scanner.next().split(",");
+
+        String invalidClient = getInvalidClient(clients);
+
+        if (invalidClient != null) {
+            System.out.println("Няма клиент на име " + invalidClient + ". Опитай пак!");
+            createDailyReportInternal();
+            return;
+        }
+
+        System.out.print("По колко време на клиент? (в минути, разделете със запетаи): ");
+        String[] durations = scanner.next().split(",");
+
+        for (int i = 0; i < clients.length; i++) {
+            dailyLog.put(clients[i], Integer.parseInt(durations[i]));
+        }
+
+        saveDailyReportToFile();
+
+        System.out.println("Протоколът за деня е създаден успешно.");
+        menu();
+    }
+    private void createDailyReportInternal() {
+        createDailyReport();
+    }
+
+    private String getInvalidClient(String[] clients) {
+        List<String> validClients = getValidClients();
+        for (String client : clients) {
+            if (!validClients.contains(client)) {
+                return client;
+            }
+        }
+        return null;
+    }
+
+
+
+
+    private List<String> getValidClients() {
+        List<String> validClients = new ArrayList<>();
+        String fileName = "clients.txt";
+
+        try (Scanner fileScanner = new Scanner(new File(fileName))) {
+            while (fileScanner.hasNextLine()) {
+                String line = fileScanner.nextLine();
+                String[] parts = line.split(",");
+
+                if (parts.length >= 1) {
+                    validClients.add(parts[0]);
+                }
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return validClients;
+    }
+
+    private void saveDailyReportToFile() {
+        String fileName = "report_from_" + getUsername() + "_" + generateReportNumber() + ".txt";
+
+        try (PrintWriter writer = new PrintWriter(fileName)) {
+            writer.println("Протокол за деня от " + getCurrentDate() + ":");
+            for (Map.Entry<String, Integer> entry : dailyLog.entrySet()) {
+                writer.println(entry.getKey() + ": " + entry.getValue() + " минути");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private int generateReportNumber() {
+        return reportCounter++;
+    }
+
+    private String getCurrentDate() {
+        Date currentDate = new Date();
+        return currentDate.toString();
     }
 }
