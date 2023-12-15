@@ -1,4 +1,5 @@
 import java.io.*;
+import java.text.ParseException;
 import java.util.*;
 
 class Admin extends User implements EmployeeManagement, ClientManagement {
@@ -11,7 +12,7 @@ class Admin extends User implements EmployeeManagement, ClientManagement {
     }
 
     @Override
-    void menu() {
+    public void menu() {
         Scanner scanner = new Scanner(System.in);
         int adminChoice;
 
@@ -57,6 +58,11 @@ class Admin extends User implements EmployeeManagement, ClientManagement {
                     System.out.println("Грешен избор.");
             }
         }
+    }
+
+    @Override
+    public void addClient(String name, String projectName, String contractExpirationDate) throws ParseException {
+
     }
 
     @Override

@@ -10,5 +10,5 @@ abstract class User {
         this.password = password;
     }
 
-    protected abstract void login();
+    protected abstract void menu();
 }

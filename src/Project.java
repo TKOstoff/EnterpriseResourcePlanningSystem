@@ -1,16 +1,16 @@
 public class Project {
-    private String name;
+    private String projectName;
 
-    public Project(String name){
-        this.name = name;
+    public Project(String projectName){
+        this.projectName = projectName;
     }
 
     public String getName() {
-        return name;
+        return projectName;
     }
 
     @Override
     public String toString() {
-        return name;
+        return projectName;
     }
 }

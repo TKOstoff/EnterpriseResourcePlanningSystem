@@ -17,7 +17,7 @@ public class Employee extends User {
     }
 
     @Override
-    protected void login() {
+    protected void menu() {
 
     }
 }
