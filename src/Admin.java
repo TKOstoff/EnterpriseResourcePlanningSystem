@@ -60,22 +60,41 @@ class Admin extends User implements EmployeeManagement, ClientManagement {
         }
     }
 
-    @Override
-    public void addClient(String name, String projectName, String contractExpirationDate) throws ParseException {
-
-    }
-
-    @Override
+     @Override
     public void addClient(String name, String projectName, Date contractExpirationDate) {
-      
+        clients.add(new Client(name, projectName, contractExpirationDate));
+
+        saveClientToFile(name, projectName, contractExpirationDate);
+
+        System.out.println("Клиента с име " + name + " и проект '" + projectName +
+                "' с изтичане на договора на '" + dateFormat.format(contractExpirationDate) + "' е успешно добавен.");
     }
 
     private void saveClientToFile(String name, String projectName, Date contractExpirationDate) {
-       
+        String fileName = "clients.txt";
+
+        try (FileWriter fileWriter = new FileWriter(fileName, true)) {
+            fileWriter.write(name + "," + projectName + "," + dateFormat.format(contractExpirationDate) + "\n");
+        } catch (IOException e) {
+            e.printStackTrace(); 
+        }
     }
 
     private void newClient() {
-       
+        Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            System.out.print("Име на клиента: ");
+            String name = scanner.next();
+            System.out.print("Име на проекта: ");
+            String projectName = scanner.next();
+
+            
+            if (contractExpirationDate != null) {
+                addClient(name, projectName, contractExpirationDate);
+                break;  
+            }
+        }
     }
 
     @Override
