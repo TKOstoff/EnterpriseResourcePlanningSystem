@@ -28,5 +28,5 @@ abstract class User {
 
 
 
-    protected abstract void menu(Client client);
+    protected abstract void menu();
 }
