@@ -10,11 +10,8 @@ class Employee extends User {
     }
 
     @Override
-    public void menu() {
-        System.out.println(" ");
-        System.out.println("Меню за служител:");
-        System.out.println("1. Създаване на протокол за деня.");
-        System.out.println("0. Връщане в менюто.");
+    void menu() {
+        Menus.printEmployeeMenu();
 
         Scanner scanner = new Scanner(System.in);
         int employeeChoice = scanner.nextInt();
