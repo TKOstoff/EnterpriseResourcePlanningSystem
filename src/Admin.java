@@ -2,7 +2,7 @@ import java.io.*;
 import java.text.*;
 import java.util.*;
 
-class Admin extends User implements EmployeeManagement, ClientManagement {
+public class Admin extends User implements EmployeeManagement, ClientManagement {
     private List<Client> clients = new ArrayList<>();
     private Map<String, Employee> employees = new HashMap<>();
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
@@ -12,7 +12,7 @@ class Admin extends User implements EmployeeManagement, ClientManagement {
     }
 
     @Override
-    void menu() {
+    public void menu() {
         Scanner scanner = new Scanner(System.in);
         int adminChoice;
 
@@ -69,9 +69,9 @@ class Admin extends User implements EmployeeManagement, ClientManagement {
 
         while (true) {
             System.out.print("Име на клиента: ");
-            String name = scanner.next();
+            String name = scanner.nextLine();
             System.out.print("Име на проекта: ");
-            String projectName = scanner.next();
+            String projectName = scanner.nextLine();
 
             Date contractExpirationDate = getValidContractExpirationDate();
             if (contractExpirationDate != null) {
