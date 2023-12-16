@@ -2,7 +2,7 @@ import java.io.*;
 import java.text.*;
 import java.util.*;
 
-public class Admin extends User implements EmployeeManagement, ClientManagement {
+class Admin extends User implements EmployeeManagement, ClientManagement {
     private List<Client> clients = new ArrayList<>();
     private Map<String, Employee> employees = new HashMap<>();
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
@@ -12,12 +12,12 @@ public class Admin extends User implements EmployeeManagement, ClientManagement 
     }
 
     @Override
-    public void menu() {
+    void menu() {
         Scanner scanner = new Scanner(System.in);
         int adminChoice;
 
         while (true) {
-            printMenu();
+            Menus.printAdminMenu();
             adminChoice = scanner.nextInt();
 
             switch (adminChoice) {
@@ -30,7 +30,7 @@ public class Admin extends User implements EmployeeManagement, ClientManagement 
                     break;
 
                 case 3:
-                    displayStatisticsMenu();
+                    DisplayStatistics.displayStatisticsMenu();
                     break;
                 case 4:
                     goBack();
@@ -69,9 +69,9 @@ public class Admin extends User implements EmployeeManagement, ClientManagement 
 
         while (true) {
             System.out.print("Име на клиента: ");
-            String name = scanner.nextLine();
+            String name = scanner.next();
             System.out.print("Име на проекта: ");
-            String projectName = scanner.nextLine();
+            String projectName = scanner.next();
 
             Date contractExpirationDate = getValidContractExpirationDate();
             if (contractExpirationDate != null) {
@@ -138,120 +138,11 @@ public class Admin extends User implements EmployeeManagement, ClientManagement 
         registerEmployee(employeeUsername, employeePassword);
     }
 
-    public void printMenu() {
-        System.out.println(" ");
-        System.out.println("Меню за администратор:");
-        System.out.println("1. Въвеждане на нови клиенти");
-        System.out.println("2. Регистрация на нови служители");
-        System.out.println("3. Гледане на статистика");
-        System.out.println("4. Връщане");
-        System.out.println("0. Излизане от програмата.");
-    }
-
-
     public void goBack() {
         System.out.println("Връщане...");
         System.out.println(" ");
         UserManager.mainMenu();
     }
 
-    private void displayReportDetails(String employeeUsername, File reportFile) {
-        try (Scanner scanner = new Scanner(reportFile)) {
-            System.out.println("Протокол за деня за служителя " + employeeUsername + ":");
 
-            while (scanner.hasNextLine()) {
-                String reportLine = scanner.nextLine();
-                String[] reportParts = reportLine.split(":");
-
-                if (reportParts.length == 2 && reportParts[0].trim().equalsIgnoreCase(employeeUsername)) {
-                    String[] clientParts = reportParts[1].split(",");
-                    if (clientParts.length == 3) {
-                        String clientName = clientParts[0];
-                        String duration = clientParts[1];
-                        String date = clientParts[2];
-                        System.out.println(clientName + ": " + duration + " минути, " + date);
-                    }
-                }
-            }
-            displayStatisticsMenu();
-
-
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void displayStatisticsMenu() {
-        Scanner scanner = new Scanner(System.in);
-        printStatisticsMenu();
-        int choice = scanner.nextInt();
-        while (true) {
-            switch (choice) {
-                case 1:
-                    System.out.print("Въведете име на служител: ");
-                    String employeeName = scanner.next();
-                    displayEmployeeStatistics(employeeName);
-                    break;
-
-                case 2:
-                    searchByWeek();
-                    break;
-
-                case 3:
-                    UserManager.mainMenu();
-                    break;
-
-                default:
-                    System.out.println("Невалиден избор.");
-            }
-        }
-    }
-
-    public void printStatisticsMenu() {
-        System.out.println("Статистика:");
-        System.out.println("1. Търсене по име на служител");
-        System.out.println("2. Търсене по номер на седмица");
-        System.out.println("3. Върни се в менюто");
-    }
-
-    private boolean doesEmployeeNameExists(String employeeName, File reportFile) {
-        try (Scanner fileScanner = new Scanner(reportFile)) {
-            while (fileScanner.hasNextLine()) {
-                String line = fileScanner.nextLine();
-                String[] parts = line.split(":");
-
-                if (parts.length == 2) {
-                    String storedUsername = parts[0].trim().toLowerCase();
-
-                    if (employeeName.trim().toLowerCase().equals(storedUsername)) {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-
-    private void displayEmployeeStatistics(String employeeUsername) {
-        String fileName = "reports.txt";
-        File reportFile = new File(fileName);
-
-        if (reportFile.exists()) {
-            if (doesEmployeeNameExists(employeeUsername, reportFile)) {
-                displayReportDetails(employeeUsername, reportFile);
-            } else {
-                System.out.println("Няма налична статистика за служителя " + employeeUsername);
-            }
-        } else {
-            System.out.println("Няма налична статистика за служителя " + employeeUsername);
-        }
-    }
-    private void searchByWeek() {
-        System.out.println("Търсене по седмица...");
-    }
 }
