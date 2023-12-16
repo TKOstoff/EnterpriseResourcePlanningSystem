@@ -157,30 +157,29 @@ class Admin extends User implements EmployeeManagement, ClientManagement {
 
     private void displayReportDetails(String employeeUsername, File reportFile) {
         try (Scanner scanner = new Scanner(reportFile)) {
-            System.out.println("Протокол за деня от " + extractDateFromFileName(reportFile.getName()) + ":");
-            String reportLine = scanner.nextLine();
-            String[] reportParts = reportLine.split("-");
+            System.out.println("Протокол за деня за служителя " + employeeUsername + ":");
 
-            if (reportParts.length == 2 && reportParts[0].equals(employeeUsername)) {
-                String[] clientParts = reportParts[1].split(",");
-                if (clientParts.length == 2) {
-                    String clientName = clientParts[0].trim();
-                    String duration = clientParts[1].trim();
-                    System.out.println(clientName + ": " + duration + " минути");
+            while (scanner.hasNextLine()) {
+                String reportLine = scanner.nextLine();
+                String[] reportParts = reportLine.split(":");
+
+                if (reportParts.length == 2 && reportParts[0].trim().equalsIgnoreCase(employeeUsername)) {
+                    String[] clientParts = reportParts[1].split(",");
+                    if (clientParts.length == 3) {
+                        String clientName = clientParts[0];
+                        String duration = clientParts[1];
+                        String date = clientParts[2];
+                        System.out.println(clientName + ": " + duration + " минути, " + date);
+                    }
                 }
             }
+            displayStatisticsMenu();
+
+
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-    }
-
-
-    private String extractDateFromFileName(String fileName) {
-        String[] parts = fileName.split("_");
-        if (parts.length >= 4) {
-            return parts[3].substring(0, parts[3].lastIndexOf('.'));
-        }
-        return "";
     }
 
     private void displayStatisticsMenu() {
@@ -200,10 +199,11 @@ class Admin extends User implements EmployeeManagement, ClientManagement {
                     break;
 
                 case 3:
-                    return;
+                    UserManager.mainMenu();
+                    break;
 
                 default:
-                    System.out.println("Грешен избор.");
+                    System.out.println("Невалиден избор.");
             }
         }
     }
@@ -212,17 +212,17 @@ class Admin extends User implements EmployeeManagement, ClientManagement {
         System.out.println("Статистика:");
         System.out.println("1. Търсене по име на служител");
         System.out.println("2. Търсене по номер на седмица");
-        System.out.println("3. Назад");
+        System.out.println("3. Върни се в менюто");
     }
 
     private boolean doesEmployeeNameExists(String employeeName, File reportFile) {
         try (Scanner fileScanner = new Scanner(reportFile)) {
             while (fileScanner.hasNextLine()) {
                 String line = fileScanner.nextLine();
-                String[] parts = line.split("-");
+                String[] parts = line.split(":");
 
                 if (parts.length == 2) {
-                    String storedUsername = parts[0].trim().toLowerCase(); 
+                    String storedUsername = parts[0].trim().toLowerCase();
 
                     if (employeeName.trim().toLowerCase().equals(storedUsername)) {
                         return true;
@@ -235,6 +235,7 @@ class Admin extends User implements EmployeeManagement, ClientManagement {
             return false;
         }
     }
+
 
     private void displayEmployeeStatistics(String employeeUsername) {
         String fileName = "reports.txt";
